@@ -20,3 +20,13 @@ jobs:
           name: version
           command: |
             gcloud version
+      - terraform/plan:
+          checkout: true
+          context: terraform
+          persist-workspace: true
+      - terraform/apply:
+          attach-workspace: true
+          context: terraform
+          filters:
+            branches:
+              only: main
