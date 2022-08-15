@@ -4,40 +4,15 @@ orbs:
   gcp-cli: circleci/gcp-cli@2.1.0
 
 jobs:
-  apply:
-    executor: gcp-cli/default
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: google/cloud-sdk:latest
+
     steps:
       - checkout
-      - gcp-cli/install
       - gcp-cli/initialize
       - run:
-          name: install terraform
+          name: Deploy to Google App Engine
           command: |
-            echo $GCLOUD_SERVICE_KEY | base64 -d > g.json
-            cat ${HOME}/g.json
-            echo "credencial activate"
-            pwd
-            ls
-            gcloud config set project "ca-dena-proxy"
-            #gcloud config set project project-slug
-            #gcloud auth configure-docker --quiet
-            #gcloud app deploy --quiet
-            gcloud auth activate-service-account --key-file g.json
-            gcloud auth application-default login
-            curl -LO https://releases.hashicorp.com/terraform/0.14.0/terraform_0.14.0_linux_amd64.zip
-            apt-get install unzip
-            sudo unzip ./terraform_0.14.0_linux_amd64.zip -d /usr/local/bin/
-      - run:
-          name: terraform apply
-          command: |
-            cd terraform
-            export GOOGLE_PROJECT_ID="ca-dena-proxy"
-            export GOOGLE_CREDENTIALS=${HOME}/g.json
-            echo $GOOGLE_PROJECT_ID
-            echo $GOOGLE_CREDENTIALS
-            terraform init
-            terraform apply -var="project=${GOOGLE_PROJECT_ID}" -auto-approve
-workflows:
-  deploy:
-    jobs:
-      - apply
+            gcloud --quiet app deploy app.yaml --version=test
