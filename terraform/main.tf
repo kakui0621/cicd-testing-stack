@@ -1,6 +1,6 @@
 provider "google" {
-  credentials = "root/gcloud-service-key.json"
-  project     = "ca-dena-proxy"
+  credentials = "${HOME}/gcloud-service-key.json"
+  project     = "glassy-fort-263817"
   region      = "asia-northeast1"
 }
 
@@ -14,3 +14,4 @@ resource "google_storage_bucket" "private-bucket" {
     env = "test"
   }
 }
+
