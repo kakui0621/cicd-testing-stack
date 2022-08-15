@@ -20,11 +20,11 @@ jobs:
           name: version
           command: |
             gcloud version
-       - run:
+      - run:
           name: init
           command: |
             terraform init
-       - run:
+      - run:
           name: plan
           command: |
             terraform plan
