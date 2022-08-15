@@ -13,6 +13,10 @@ jobs:
       - checkout
       - gcp-cli/initialize
       - run:
-          name: Deploy to Google App Engine
+          name: annalinze
           command: |
-            gcloud --quiet app deploy app.yaml --version=test
+            gsutil ls
+      - run:
+          name: version
+          command: |
+            gcloud version
