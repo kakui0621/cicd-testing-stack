@@ -1,0 +1,30 @@
+name: Slack Notification
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  slack_notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Detect Merge Conflict
+        id: conflict_check
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor HEAD origin/main
+          CONFLICT=$?
+          echo "::set-output name=conflict::$CONFLICT"
+
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_CHANNEL: "notification-test"
+          # Append merge conflict information to the slack message
+          SLACK_MESSAGE: "Pushed to branch by ${{ github.actor }}. Merge conflict detected: ${{ steps.conflict_check.outputs.conflict }}"
+          SLACK_WEBHOOK: 
